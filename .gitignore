@@ -1,2 +1,12 @@
 build.mjs
 dist/
+
+# harness (local tooling, never committed)
+/AGENTS.md
+/CLAUDE.md
+/docs/
+/progress/
+/CHECKPOINTS.md
+/init.sh
+/.claude/agents/
+/feature_list.json
