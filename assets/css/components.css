@@ -1,0 +1,30 @@
+table.data { width: 100%; border-collapse: collapse; }
+table.data th { background: #000080; color: #fff; text-align: left; padding: 3px 6px; }
+table.data td { border: 1px solid #888; padding: 3px 6px; }
+table.data tr:nth-child(even) td { background: #eef; }
+table.data.tools tbody td { background: #fff; vertical-align: middle; }
+table.data.tools tbody:nth-of-type(even) td { background: #eef; }
+table.data.tools tr.sub td { border-top: 0; font-size: 11px; padding: 1px 6px 4px 22px; color: #333; }
+.post { border: 2px outset #ccc; margin: 0 0 12px; background: #ffffe0; }
+.post .head { background: #c0c0c0; padding: 3px 8px; border-bottom: 1px solid #888; }
+.post .body { padding: 6px 10px; }
+.post h4 { margin: 6px 0 2px; font-size: 12px; text-decoration: underline; }
+.post ul { margin: 0 0 4px; padding-left: 22px; }
+.now { color: #f00; font-weight: bold; }
+.bar { width: 100px; border: 1px solid #000; height: 10px; background: #fff; }
+.bar div { background: #0a0; height: 10px; }
+.vis { display: inline-block; font: bold 9px Verdana, Arial, sans-serif; letter-spacing: 1px; padding: 1px 5px; border: 2px outset #fff; vertical-align: middle; }
+.vis.pub { background: #006600; color: #00ff00; }
+.vis.priv { background: #660000; color: #ffff00; }
+table.matrix { border-collapse: collapse; margin: 6px 0; }
+table.matrix th { background: #c0c0c0; border: 2px outset #fff; padding: 2px 6px; font-size: 11px; white-space: nowrap; }
+table.matrix th a { color: #000; text-decoration: none; }
+table.matrix td.c { width: 34px; height: 24px; text-align: center; border: 2px inset #888; font-size: 11px; padding: 0; }
+table.matrix td.c a { display: block; color: #000; text-decoration: none; line-height: 24px; }
+.l0 { background: #fff; } .l1 { background: #99ff99; } .l2 { background: #33cc33; } .l3 { background: #ffcc00; } .l4 { background: #ff3300; }
+table.matrix td.sel { outline: 3px solid #000080; }
+.legend span { display: inline-block; width: 14px; height: 14px; border: 1px solid #000; vertical-align: middle; }
+.chip { background: #000080; color: #fff; padding: 0 5px; font-size: 11px; }
+details.month { margin: 0 0 8px; }
+details.month > summary { background: #c0c0c0; border: 2px outset #fff; padding: 3px 8px; cursor: pointer; font-weight: bold; }
+.filterbar { background: #ffffe0; border: 1px dashed #888; padding: 4px 8px; margin: 8px 0; }
