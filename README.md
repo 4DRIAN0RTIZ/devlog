@@ -1,5 +1,7 @@
 # devlog
 
+Live: https://devlog.cuevaneander.tech
+
 Retro (2000s-style) dev log: what I'm building right now, progress per milestone and a changelog per tool. Plain HTML + vanilla JS, no build step.
 
 It polls the public `activity` endpoint every 60 s and fetches each tool's `CHANGELOG.md` through the `changelog` endpoint (works for private repos too, only for repos carrying the `roadmap` label).
