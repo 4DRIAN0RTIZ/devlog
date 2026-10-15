@@ -10,6 +10,8 @@ All notable changes to this project are documented here.
 
 ### Chore
 
+- Add roadmap issue template ([18d7db9](https://github.com/4DRIAN0RTIZ/devlog/commit/18d7db9e6c59f7c5d8cf3ad03832d6cda2bc5bee))
+- Update CHANGELOG.md [skip ci] ([4638dc7](https://github.com/4DRIAN0RTIZ/devlog/commit/4638dc7c6ee504c7af3741cf85ce6b419cc1736c))
 - Update CHANGELOG.md [skip ci] ([8e55ea5](https://github.com/4DRIAN0RTIZ/devlog/commit/8e55ea5810a87e0ab1b43e84e56670d25244c664))
 
 ### Documentation
