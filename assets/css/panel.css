@@ -15,4 +15,9 @@
 .inst { border: 2px inset #888; background: #fff; height: 18px; width: 100%; }
 .inst div { background: repeating-linear-gradient(90deg, #000080 0 10px, #fff 10px 12px); height: 100%; width: 0; transition: width 1.5s linear; }
 .cloud a { margin: 0 6px; line-height: 1.6; }
-.sortable th { cursor: pointer; }
+.sortable th button { border: 0; padding: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.sortable th button:focus-visible { outline: 2px solid #000080; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+	.vu .bar2, .inst div { transition: none; }
+}

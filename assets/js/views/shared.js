@@ -12,7 +12,7 @@ export function visibilityBadge(item) {
 export function progressBar(stats) {
 	if (!stats) return '';
 	const progress = Math.max(0, Math.min(100, stats.progress));
-	return `<table cellpadding="0" cellspacing="0"><tr><td style="border:0;padding:0"><div class="bar"><div style="width:${progress}%"></div></div></td><td style="border:0;padding:0 0 0 6px;white-space:nowrap"><small>${progress}% (${stats.closedIssues}/${stats.totalIssues})</small></td></tr></table>`;
+	return `<table cellpadding="0" cellspacing="0"><tr><td style="border:0;padding:0"><div class="bar" role="progressbar" aria-label="Progreso del hito" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><div style="width:${progress}%"></div></div></td><td style="border:0;padding:0 0 0 6px;white-space:nowrap"><small>${progress}% (${stats.closedIssues}/${stats.totalIssues})</small></td></tr></table>`;
 }
 
 export function lastClosedHtml(item) {
@@ -42,7 +42,18 @@ export function stamp() {
 }
 
 export function frame(subtitle, current, mainHtml) {
-	byId('marquee').textContent = subtitle;
+	const marquee = byId('marquee');
+	const marqueeToggle = byId('marqueeToggle');
+	const setMarqueePaused = (paused) => {
+		marquee.dataset.paused = paused;
+		if (paused) marquee.stop();
+		else marquee.start();
+		marqueeToggle.textContent = paused ? 'Reanudar desplazamiento' : 'Pausar desplazamiento';
+	};
+	marquee.textContent = subtitle;
+	const hasPauseState = 'paused' in marquee.dataset;
+	setMarqueePaused(hasPauseState ? marquee.dataset.paused === 'true' : window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+	marqueeToggle.onclick = () => setMarqueePaused(marquee.dataset.paused !== 'true');
 	byId('side').innerHTML = sidebar(current);
 	byId('main').innerHTML = mainHtml;
 	stamp();
