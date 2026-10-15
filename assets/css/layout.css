@@ -1,7 +1,10 @@
 table.frame { width: 860px; max-width: 100%; margin: 0 auto; background: #c0c0c0; border: 3px ridge #fff; border-collapse: separate; border-spacing: 0; }
+.skip-link { position: absolute; top: 0; left: 50%; z-index: 1; padding: 8px 12px; transform: translate(-50%, -100%); background: #000080; color: #fff; }
+.skip-link:focus { transform: translate(-50%, 0); }
 .banner { background: #000; color: #ff0; text-align: center; padding: 12px; border-bottom: 3px groove #fff; }
 .banner h1 { font-family: "Times New Roman", serif; font-size: 30px; margin: 0; color: #ff0; }
 .banner .sub { color: #0ff; font-size: 12px; }
+.marquee-toggle { margin-left: 8px; font: inherit; }
 .side { width: 190px; background: #dcdcdc; border-right: 2px groove #fff; padding: 8px; }
 .side h3 { background: #000080; color: #fff; margin: 10px 0 4px; padding: 2px 6px; font-size: 12px; }
 .side ul { list-style: square; margin: 0; padding-left: 20px; }

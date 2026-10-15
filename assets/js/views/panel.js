@@ -5,7 +5,7 @@ import { frame } from './shared.js';
 
 export function renderPanel() {
 	frame('Panel de control :: instrumentos, medidores y adivinanzas con los datos de /activity', null,
-		'<h2>Estado general</h2><table><tr><td><div class="lights" id="lights"></div></td><td><div class="clippy" id="clippy"></div></td></tr></table><h2>V&uacute;metro de progreso</h2><div class="vu" id="vu"></div><h2>Mascotas</h2><p><small>Su &aacute;nimo depende de hace cu&aacute;nto las toqu&eacute;.</small></p><div class="tamas" id="tamas"></div><h2>Reloj desde el &uacute;ltimo toque</h2><table class="data clock" id="clock"></table><h2>Radar</h2><p><small>Cerca del centro = reciente. Amarillo parpadeante = en curso.</small></p><div id="radar"></div><h2>Desfragmentador e instalador</h2><p>Hito de: <select id="tool"></select> <button id="defragBtn" type="button">Desfragmentar</button> <small id="defragInfo"></small></p><div class="defrag" id="defrag"></div><p><small id="instMsg"></small></p><div class="inst"><div id="instBar"></div></div><h2>Tabla ordenable</h2><p>Filtrar: <input id="q" type="text" size="20"> <small>(clic en una cabecera para ordenar)</small></p><table class="data sortable" id="sortable"></table><h2>Desde tu &uacute;ltima visita</h2><div id="diff"></div><h2>&iquest;Cu&aacute;ndo termina?</h2><p><small>C&aacute;lculo ingenuo: issues cerrados &divide; d&iacute;as desde el primer release.</small></p><table class="data" id="eta"></table><h2>Nube de pendientes</h2><p><small>Tama&ntilde;o = issues abiertos en el hito.</small></p><div class="cloud" id="cloud"></div>');
+		'<h2>Estado general</h2><table><tr><td><div class="lights" id="lights"></div></td><td><div class="clippy" id="clippy"></div></td></tr></table><h2>V&uacute;metro de progreso</h2><div class="vu" id="vu"></div><h2>Mascotas</h2><p><small>Su &aacute;nimo depende de hace cu&aacute;nto las toqu&eacute;.</small></p><div class="tamas" id="tamas"></div><h2>Reloj desde el &uacute;ltimo toque</h2><table class="data clock" id="clock"></table><h2>Radar</h2><p><small>Cerca del centro = reciente. Amarillo parpadeante = en curso.</small></p><div id="radar"></div><h2>Desfragmentador e instalador</h2><p><label for="tool">Hito de:</label> <select id="tool"></select> <button id="defragBtn" type="button">Desfragmentar</button> <small id="defragInfo"></small></p><div class="defrag" id="defrag"></div><p><small id="instMsg"></small></p><div class="inst"><div id="instBar"></div></div><h2>Tabla ordenable</h2><p><small>(clic en una cabecera para ordenar)</small></p><table class="data sortable" id="sortable"></table><h2>Desde tu &uacute;ltima visita</h2><div id="diff"></div><h2>&iquest;Cu&aacute;ndo termina?</h2><p><small>C&aacute;lculo ingenuo: issues cerrados &divide; d&iacute;as desde el primer release.</small></p><table class="data" id="eta"></table><h2>Nube de pendientes</h2><p><small>Tama&ntilde;o = issues abiertos en el hito.</small></p><div class="cloud" id="cloud"></div>');
 	initPanel();
 }
 
@@ -19,6 +19,7 @@ function initPanel() {
 	}));
 	const now = Date.now();
 	const DAY = 86400000;
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	const progress = (tool) => tool.stats ? tool.stats.progress : 0;
 	const openIssues = (tool) => tool.stats ? tool.stats.open : 0;
 	const age = (date) => (now - Date.parse(date)) / DAY;
@@ -34,9 +35,11 @@ function initPanel() {
 		? `<b>Parece que intentas hacer demasiado.</b><br>Hoy hay ${activeCount} proyectos en marcha a la vez. &iquest;Quieres que te ayude a elegir uno?`
 		: `<b>Buen foco.</b><br>${activeCount === 0 ? 'Hoy no hay proyectos en marcha.' : activeCount === 1 ? 'Hoy hay 1 proyecto en marcha.' : `Hoy hay ${activeCount} proyectos en marcha.`} Sigue as&iacute;.`;
 
-	byId('vu').innerHTML = tools.map((tool) => `<div class="col"><div class="bar2" data-h="${progress(tool)}"></div>${progress(tool)}%<br>${escapeHtml(tool.name.slice(0, 8))}</div>`).join('');
-	const barTimeout = setTimeout(() => document.querySelectorAll('.bar2').forEach((bar) => { bar.style.height = `${bar.dataset.h}%`; }), 100);
-	addCleanup(() => clearTimeout(barTimeout));
+	byId('vu').innerHTML = tools.map((tool) => `<div class="col"><div class="bar2" data-h="${progress(tool)}" role="progressbar" aria-label="Progreso de ${escapeHtml(tool.name)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress(tool)}"></div>${progress(tool)}%<br>${escapeHtml(tool.name.slice(0, 8))}</div>`).join('');
+	const setBarHeights = () => document.querySelectorAll('.bar2').forEach((bar) => { bar.style.height = `${bar.dataset.h}%`; });
+	const barTimeout = reduceMotion ? null : setTimeout(setBarHeights, 100);
+	if (reduceMotion) setBarHeights();
+	addCleanup(() => { if (barTimeout) clearTimeout(barTimeout); });
 
 	const mood = (days) => days <= 3 ? ['(^o^)', 'feliz'] : days <= 10 ? ['(-_-)', 'tranquilo'] : days <= 30 ? ['(u_u)', 'aburrido'] : ['(-.-)zZ', 'dormido'];
 	byId('tamas').innerHTML = tools.map((tool) => { const currentMood = mood(age(tool.updatedAt)); return `<div class="tama">${escapeHtml(tool.name)}<b>${currentMood[0]}</b>${currentMood[1]}</div>`; }).join('');
@@ -55,12 +58,12 @@ function initPanel() {
 	const radius = 140, center = 160;
 	let radar = '<svg width="320" height="320" style="background:#001a00;border:2px inset #888">';
 	[7, 30, 60].forEach((days) => { const distance = 10 + (days / 60) * radius; radar += `<circle cx="${center}" cy="${center}" r="${distance}" fill="none" stroke="#0a0"/><text x="${center + distance - 18}" y="${center - 3}" fill="#0a0" font-size="9">${days}d</text>`; });
-	radar += `<line x1="${center}" y1="${center}" x2="${center}" y2="${center - radius - 10}" stroke="#0f0" stroke-width="2"><animateTransform attributeName="transform" type="rotate" from="0 ${center} ${center}" to="360 ${center} ${center}" dur="4s" repeatCount="indefinite"/></line>`;
+	radar += `<line x1="${center}" y1="${center}" x2="${center}" y2="${center - radius - 10}" stroke="#0f0" stroke-width="2">${reduceMotion ? '' : `<animateTransform attributeName="transform" type="rotate" from="0 ${center} ${center}" to="360 ${center} ${center}" dur="4s" repeatCount="indefinite"/>`}</line>`;
 	tools.forEach((tool, index) => {
 		const distance = 10 + (Math.min(age(tool.updatedAt), 60) / 60) * radius;
 		const angle = index * 2 * Math.PI / Math.max(1, tools.length);
 		const x = center + distance * Math.cos(angle), y = center + distance * Math.sin(angle);
-		radar += `<circle cx="${x}" cy="${y}" r="4" fill="${tool.working ? '#ff0' : '#0f0'}">${tool.working ? '<animate attributeName="r" values="3;8;3" dur="1.4s" repeatCount="indefinite"/>' : ''}<title>${escapeHtml(tool.name)} - ${Math.round(age(tool.updatedAt))} d</title></circle><text x="${x + 6}" y="${y + 3}" fill="#0f0" font-size="9">${escapeHtml(tool.name)}</text>`;
+		radar += `<circle cx="${x}" cy="${y}" r="4" fill="${tool.working ? '#ff0' : '#0f0'}">${tool.working && !reduceMotion ? '<animate attributeName="r" values="3;8;3" dur="1.4s" repeatCount="indefinite"/>' : ''}<title>${escapeHtml(tool.name)}${tool.working ? ' (en curso)' : ''} - ${Math.round(age(tool.updatedAt))} d</title></circle><text x="${x + 6}" y="${y + 3}" fill="#0f0" font-size="9">${escapeHtml(tool.name)}${tool.working ? ' (en curso)' : ''}</text>`;
 	});
 	byId('radar').innerHTML = `${radar}</svg>`;
 
@@ -74,6 +77,7 @@ function initPanel() {
 
 function initDefragmenter(tools) {
 	const selector = byId('tool');
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	selector.innerHTML = tools.filter((tool) => tool.stats).map((tool) => `<option value="${escapeHtml(tool.name)}">${escapeHtml(tool.name)}</option>`).join('');
 	let sorted = [], shuffled = [], timer = null;
 	const paint = (blocks) => { byId('defrag').innerHTML = blocks.map((block) => `<i class="${block ? 'd' : ''}"></i>`).join(''); };
@@ -88,7 +92,12 @@ function initDefragmenter(tools) {
 		setTimeout(() => { bar.style.transition = ''; bar.style.width = `${stats.progress}%`; }, 50);
 		byId('instMsg').textContent = `Instalando "${tool.milestone}"... copiando ${stats.closed}/${stats.total} issues (${stats.progress}%)`;
 	};
-	byId('defragBtn').onclick = () => { let index = 0; clearInterval(timer); timer = setInterval(() => { index += 6; paint(sorted.slice(0, index).concat(shuffled.slice(index))); if (index >= sorted.length) clearInterval(timer); }, 40); };
+	byId('defragBtn').onclick = () => {
+		clearInterval(timer);
+		if (reduceMotion) { paint(sorted); return; }
+		let index = 0;
+		timer = setInterval(() => { index += 6; paint(sorted.slice(0, index).concat(shuffled.slice(index))); if (index >= sorted.length) clearInterval(timer); }, 40);
+	};
 	addCleanup(() => clearInterval(timer));
 	selector.onchange = pick;
 	pick();
@@ -98,12 +107,10 @@ function initSortableTable(tools, progress, openIssues, age) {
 	const columns = [['Herramienta', (tool) => tool.name.toLowerCase()], ['Versión', (tool) => tool.version || ''], ['Progreso', progress], ['Abiertos', openIssues], ['Días sin tocar', (tool) => age(tool.updatedAt)]];
 	let sortColumn = 4, sortDirection = -1;
 	const draw = () => {
-		const query = byId('q').value.toLowerCase();
-		const rows = tools.filter((tool) => tool.name.toLowerCase().includes(query)).sort((left, right) => (columns[sortColumn][1](left) > columns[sortColumn][1](right) ? 1 : columns[sortColumn][1](left) < columns[sortColumn][1](right) ? -1 : 0) * sortDirection);
-		byId('sortable').innerHTML = `<tr>${columns.map((column, index) => `<th data-i="${index}">${column[0]}${index === sortColumn ? (sortDirection > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('')}</tr>${rows.map((tool) => `<tr><td>${escapeHtml(tool.name)}</td><td>${escapeHtml(tool.version || '-')}</td><td>${progress(tool)}%</td><td>${openIssues(tool)}</td><td>${age(tool.updatedAt).toFixed(1)}</td></tr>`).join('')}`;
+		const rows = [...tools].sort((left, right) => (columns[sortColumn][1](left) > columns[sortColumn][1](right) ? 1 : columns[sortColumn][1](left) < columns[sortColumn][1](right) ? -1 : 0) * sortDirection);
+		byId('sortable').innerHTML = `<tr>${columns.map((column, index) => `<th scope="col"${index === sortColumn ? ` aria-sort="${sortDirection > 0 ? 'ascending' : 'descending'}"` : ''}><button type="button" data-i="${index}">${column[0]}${index === sortColumn ? (sortDirection > 0 ? ' ▲' : ' ▼') : ''}</button></th>`).join('')}</tr>${rows.map((tool) => `<tr><td>${escapeHtml(tool.name)}</td><td>${escapeHtml(tool.version || '-')}</td><td>${progress(tool)}%</td><td>${openIssues(tool)}</td><td>${age(tool.updatedAt).toFixed(1)}</td></tr>`).join('')}`;
 	};
-	byId('sortable').onclick = (event) => { const index = event.target.getAttribute?.('data-i'); if (index == null) return; const numericIndex = Number(index); sortDirection = numericIndex === sortColumn ? -sortDirection : 1; sortColumn = numericIndex; draw(); };
-	byId('q').oninput = draw;
+	byId('sortable').onclick = (event) => { const button = event.target.closest?.('button[data-i]'); const index = button?.dataset.i; if (index == null) return; const numericIndex = Number(index); sortDirection = numericIndex === sortColumn ? -sortDirection : 1; sortColumn = numericIndex; draw(); };
 	draw();
 }
 

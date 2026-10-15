@@ -4,29 +4,62 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="https://developer.cuevaneander.tech/favicon.png">
-	<link rel="stylesheet" href="assets/css/main.css">
 	<title>NeanderTech Dev Log</title>
+	<meta name="description" content="Dashboard retro con lo que NeanderTech está construyendo ahora: progreso por hito y changelog por herramienta.">
+	<meta name="author" content="NeanderTech">
+	<meta name="robots" content="index, follow">
+	<meta name="theme-color" content="#000080">
+	<link rel="canonical" href="https://devlog.cuevaneander.tech/">
+	<link rel="icon" type="image/png" href="https://developer.cuevaneander.tech/favicon.png">
+	<link rel="apple-touch-icon" href="https://devlog.cuevaneander.tech/assets/images/favicon.png">
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="NeanderTech Dev Log">
+	<meta property="og:locale" content="es_MX">
+	<meta property="og:url" content="https://devlog.cuevaneander.tech/">
+	<meta property="og:title" content="NeanderTech Dev Log">
+	<meta property="og:description" content="Dashboard retro con lo que NeanderTech está construyendo ahora: progreso por hito y changelog por herramienta.">
+	<meta property="og:image" content="https://devlog.cuevaneander.tech/assets/images/og-image.png">
+	<meta property="og:image:type" content="image/png">
+	<meta property="og:image:width" content="1731">
+	<meta property="og:image:height" content="909">
+	<meta property="og:image:alt" content="NeanderTech Dev Log: dashboard retro de desarrollo">
+
+	<!-- Twitter / X -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="NeanderTech Dev Log">
+	<meta name="twitter:description" content="Dashboard retro con lo que NeanderTech está construyendo ahora: progreso por hito y changelog por herramienta.">
+	<meta name="twitter:image" content="https://devlog.cuevaneander.tech/assets/images/og-image.png">
+	<meta name="twitter:image:alt" content="NeanderTech Dev Log: dashboard retro de desarrollo">
+
+	<link rel="stylesheet" href="assets/css/main.css">
 </head>
 
 <body>
-	<table class="frame" cellpadding="0" cellspacing="0">
+	<a class="skip-link" href="#main">Saltar al contenido principal</a>
+	<table class="frame" role="presentation" cellpadding="0" cellspacing="0">
 		<tr>
-			<td colspan="2" class="banner">
-				<h1>~ NeanderTech Dev Log ~</h1>
-				<div class="sub">
-					<marquee scrollamount="3" id="marquee">Cargando...</marquee>
-				</div>
+			<td colspan="2">
+				<header class="banner">
+					<h1>~ NeanderTech Dev Log ~</h1>
+					<div class="sub">
+						<marquee scrollamount="3" id="marquee">Cargando...</marquee>
+						<button class="marquee-toggle" id="marqueeToggle" type="button">Pausar desplazamiento</button>
+					</div>
+				</header>
 			</td>
 		</tr>
 		<tr>
-			<td class="side" id="side"></td>
-			<td class="main" id="main">
-				<p>Cargando datos de <code>/activity</code>...</p>
+			<td><nav class="side" id="side" aria-label="Navegación"></nav></td>
+			<td>
+				<main class="main" id="main" tabindex="-1">
+					<p>Cargando datos de <code>/activity</code>...</p>
+				</main>
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2" class="foot" id="foot">...</td>
+			<td colspan="2"><footer class="foot" id="foot">...</footer></td>
 		</tr>
 	</table>
 
