@@ -6,6 +6,7 @@ All notable changes to this project are documented here.
 
 ### CI
 
+- Rename develop branch to dev ([369c442](https://github.com/4DRIAN0RTIZ/devlog/commit/369c44273435833e257fbc423dac644b74aebcbe))
 - Add git-cliff changelog and release workflows ([fcc3b77](https://github.com/4DRIAN0RTIZ/devlog/commit/fcc3b77c482312df62ad59414173678e8f688f92))
 
 ### Chore
